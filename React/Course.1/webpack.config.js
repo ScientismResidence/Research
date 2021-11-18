@@ -1,30 +1,44 @@
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const DotenvWebpackPlugin = require('dotenv-webpack');
+
 module.exports = {
-  entry: ['./src/index.js'],
-  output: {
-    path: __dirname,
-    publicPath: '/',
-    filename: 'bundle.js'
-  },
-  module: {
-    loaders: [
-      {
-        exclude: /node_modules/,
-        loader: 'babel',
-        query: {
-          presets: ['react', 'es2015', 'stage-1']
-        }
-      }
-    ]
-  },
-  resolve: {
-    extensions: ['', '.js', '.jsx']
-  },
-  devServer: {
-    historyApiFallback: true,
-    contentBase: './',
-    watchOptions: {
-      aggregateTimeout: 300,
-      poll: 1000
-    }
-  }
-};
+    mode: 'development',
+    output: {
+        path: path.join(__dirname, '/dist'),
+        filename: 'index.bundle.js'
+    },
+    // webpack 5 comes with devServer which loads in development mode
+    devServer: {
+        static: {
+            directory: path.join(__dirname, 'src'),
+        },
+        port: 8080
+    },
+    // Rules of how webpack will take our files, complie & bundle them for the browser 
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /nodeModules/,
+                use: {
+                    loader: 'babel-loader'
+                }
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+            }
+        ]
+    },
+    devtool: 'source-map',
+    plugins: [
+        new HtmlWebpackPlugin({ template: './src/index.html' }),
+        new DotenvWebpackPlugin({
+            path: '.env'
+        })
+    ],
+    stats: {
+        errorDetails: true,
+    },
+}
