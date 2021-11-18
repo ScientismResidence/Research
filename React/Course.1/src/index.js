@@ -15,9 +15,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    Youtube({key: process.env.YOUTUBE_DATA_API, term: 'Science'}, (videos) => {
-      this.setState({ videos });
-    });
+    this.searchVideo("Scientism")
 
     this.state = { 
       videos: [],
@@ -25,10 +23,23 @@ class App extends Component {
     };
   }
 
+  searchVideo(term) {
+    try {
+      console.log("Starting search");
+      Youtube({key: process.env.YOUTUBE_DATA_API, term: term}, (videos) => {
+        console.log(videos);
+        this.setState({ videos });
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
   render() {
     return (
       <div>
-        <SearchBar/>
+        <SearchBar onSearchTermChange={(term) => this.searchVideo(term)}/>
         <VideoDetail video={this.state.selectedVideo}/>
         <VideoList 
           onVideoSelect={selectedVideo => this.setState({selectedVideo})}
