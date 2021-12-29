@@ -38,6 +38,15 @@
             "skipFiles": [
                 "<node_internals>/**/*.js"
             ]
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Debug React.Course.1",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}/React/Course.1",
+            "sourceMaps": true,
+            "trace": true
         }
     ]
 }
