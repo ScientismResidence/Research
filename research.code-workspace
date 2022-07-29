@@ -5,6 +5,9 @@
 		}
 	],
 	"settings": {
-		"terminal.integrated.cwd": "${workspaceFolder}/React/Course.1"
+		"terminal.integrated.cwd": "${workspaceFolder}/react/course-01",
+		"workbench.tree.indent": 16,
+		"workbench.tree.renderIndentGuides": "always",
+		"editor.tabSize": 4
 	}
 }
