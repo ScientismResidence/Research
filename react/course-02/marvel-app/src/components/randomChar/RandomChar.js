@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 
 import Spinner from "../ui/spinner/Spinner";
 import MarvelService from "../../services/MarvelService";
@@ -7,66 +7,62 @@ import Error from "../ui/error/Error";
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
-class RandomChar extends Component {
-    state = {
-        character: {},
-        isLoading: true,
-        isError: false
-    };
+const RandomChar = () => {
+    const [character, setCharacter] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
 
-    marvelService = new MarvelService();
+    const marvelService = new MarvelService();
 
-    componentDidMount() {
-        this.updateCharacter();
+    useEffect(() => {
+        updateCharacter();
+    }, []);
+
+    const onCharacterUpdate = (character) => {
+        setCharacter(character);
+        setIsLoading(false);
     }
 
-    onCharacterUpdate = (character) => {
-        this.setState({ character, isLoading: false });
+    const onError = () => {
+        setIsError(true);
+        setIsLoading(false);
     }
 
-    onError = () => {
-        this.setState({ isError: true, isLoading: false });
-    }
-
-    updateCharacter = () => {
+    const updateCharacter = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        this.setState({ isLoading: true });
-        this.marvelService.getCharacter(id)
-            .then(this.onCharacterUpdate)
-            .catch(this.onError);
+        setIsLoading(true);
+        marvelService.getCharacter(id)
+            .then(onCharacterUpdate)
+            .catch(onError);
     }
 
-    render() {
-        const { character, isLoading, isError } = this.state;
+    let characterContent;
+    if (isLoading) {
+        characterContent = <Spinner />;
+    } else if (isError) {
+        characterContent = <Error />;
+    } else {
+        characterContent = <CharacterView character={character} />
+    }
 
-        let characterContent;
-        if (isLoading) {
-            characterContent = <Spinner />;
-        } else if (isError) {
-            characterContent = <Error />;
-        } else {
-            characterContent = <CharacterView character={character} />
-        }
-
-        return (
-            <div className="randomchar">
-                {characterContent}
-                <div className="randomchar__static">
-                    <p className="randomchar__title">
-                        Random character for today!<br />
-                        Do you want to get to know him better?
-                    </p>
-                    <p className="randomchar__title">
-                        Or choose another one
-                    </p>
-                    <button className="button button__main" onClick={this.updateCharacter}>
-                        <div className="inner">try it</div>
-                    </button>
-                    <img src={mjolnir} alt="mjolnir" className="randomchar__decoration" />
-                </div>
+    return (
+        <div className="randomchar">
+            {characterContent}
+            <div className="randomchar__static">
+                <p className="randomchar__title">
+                    Random character for today!<br />
+                    Do you want to get to know him better?
+                </p>
+                <p className="randomchar__title">
+                    Or choose another one
+                </p>
+                <button className="button button__main" onClick={updateCharacter}>
+                    <div className="inner">try it</div>
+                </button>
+                <img src={mjolnir} alt="mjolnir" className="randomchar__decoration" />
             </div>
-        )
-    }
+        </div>
+    )
 }
 
 const CharacterView = ({ character }) => {
@@ -75,9 +71,9 @@ const CharacterView = ({ character }) => {
 
     return (
         <div className="randomchar__block">
-            <img 
+            <img
                 src={thumbnail}
-                style={{objectFit: isImageNotFound ? "contain" : "cover"}}
+                style={{ objectFit: isImageNotFound ? "contain" : "cover" }}
                 alt="Random character"
                 className="randomchar__img" />
             <div className="randomchar__info">

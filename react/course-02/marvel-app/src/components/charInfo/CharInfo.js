@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
 import Spinner from "../ui/spinner/Spinner";
@@ -8,65 +8,54 @@ import MarvelService from "../../services/MarvelService";
 
 import './charInfo.scss';
 
-class CharInfo extends Component {
-    state = {
-        character: null,
-        isLoading: false,
-        isError: false
-    };
+const CharInfo = ({ selectedCharacter }) => {
+    const [character, setCharacter] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState(false);
 
-    marvelService = new MarvelService();
+    const marvelService = new MarvelService();
 
-    componentDidMount() {
-        this.updateCharacter();
+    useEffect(() => {
+        updateCharacter();
+    }, [selectedCharacter]);
+
+    const onCharacterUpdate = (character) => {
+        setCharacter(character);
+        setIsLoading(false);
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.selectedCharacter !== prevProps.selectedCharacter) {
-            this.updateCharacter();
-        }
+    const onError = () => {
+        setIsError(true);
+        setIsLoading(false);
     }
 
-    onCharacterUpdate = (character) => {
-        this.setState({ character, isLoading: false });
-    }
-
-    onError = () => {
-        this.setState({ isError: true, isLoading: false });
-    }
-
-    updateCharacter = () => {
-        const { selectedCharacter } = this.props;
+    const updateCharacter = () => {
         if (!selectedCharacter) {
             return;
         }
 
-        this.setState({ isLoading: true });
-        this.marvelService.getCharacter(selectedCharacter)
-            .then(this.onCharacterUpdate)
-            .catch(this.onError);
+        setIsLoading(true);
+        marvelService.getCharacter(selectedCharacter)
+            .then(onCharacterUpdate)
+            .catch(onError);
     }
 
-    render() {
-        const { character, isLoading, isError } = this.state;
-
-        let characterContent = null;
-        if (isLoading) {
-            characterContent = <Spinner />;
-        } else if (isError) {
-            characterContent = <Error />;
-        } else if (character) {
-            characterContent = <CharacterView character={character} />
-        } else {
-            characterContent = <Skeleton />
-        }
-
-        return (
-            <div className="char__info">
-                {characterContent}
-            </div>
-        )
+    let characterContent = null;
+    if (isLoading) {
+        characterContent = <Spinner />;
+    } else if (isError) {
+        characterContent = <Error />;
+    } else if (character) {
+        characterContent = <CharacterView character={character} />
+    } else {
+        characterContent = <Skeleton />
     }
+
+    return (
+        <div className="char__info">
+            {characterContent}
+        </div>
+    )
 }
 
 const CharacterView = ({ character }) => {
