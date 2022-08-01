@@ -4,16 +4,13 @@ import PropTypes from "prop-types";
 import Spinner from "../ui/spinner/Spinner";
 import Error from "../ui/error/Error";
 import Skeleton from "../skeleton/Skeleton";
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 
 import './charInfo.scss';
 
 const CharInfo = ({ selectedCharacter }) => {
     const [character, setCharacter] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-
-    const marvelService = new MarvelService();
+    const {isLoading, error, getCharacter} = useMarvelService();
 
     useEffect(() => {
         updateCharacter();
@@ -21,12 +18,6 @@ const CharInfo = ({ selectedCharacter }) => {
 
     const onCharacterUpdate = (character) => {
         setCharacter(character);
-        setIsLoading(false);
-    }
-
-    const onError = () => {
-        setIsError(true);
-        setIsLoading(false);
     }
 
     const updateCharacter = () => {
@@ -34,16 +25,13 @@ const CharInfo = ({ selectedCharacter }) => {
             return;
         }
 
-        setIsLoading(true);
-        marvelService.getCharacter(selectedCharacter)
-            .then(onCharacterUpdate)
-            .catch(onError);
+        getCharacter(selectedCharacter).then(onCharacterUpdate);
     }
 
     let characterContent = null;
     if (isLoading) {
         characterContent = <Spinner />;
-    } else if (isError) {
+    } else if (error) {
         characterContent = <Error />;
     } else if (character) {
         characterContent = <CharacterView character={character} />
@@ -60,7 +48,7 @@ const CharInfo = ({ selectedCharacter }) => {
 
 const CharacterView = ({ character }) => {
     const { name, description, thumbnail, homepage, wiki, comics } = character;
-    const isImageNotFound = thumbnail.includes("image_not_available");
+    const isImageNotFound = thumbnail ? thumbnail.includes("image_not_available") : true;
 
     let comicsElements = comics.map(value => {
         return (

@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 
 import Spinner from "../ui/spinner/Spinner";
-import MarvelService from "../../services/MarvelService";
 import Error from "../ui/error/Error";
+import useMarvelService from "../../services/MarvelService";
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
+
 const RandomChar = () => {
     const [character, setCharacter] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
-    const [isError, setIsError] = useState(false);
-
-    const marvelService = new MarvelService();
+    const {isLoading, error, getCharacter} = useMarvelService();
 
     useEffect(() => {
         updateCharacter();
@@ -20,26 +18,17 @@ const RandomChar = () => {
 
     const onCharacterUpdate = (character) => {
         setCharacter(character);
-        setIsLoading(false);
-    }
-
-    const onError = () => {
-        setIsError(true);
-        setIsLoading(false);
     }
 
     const updateCharacter = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        setIsLoading(true);
-        marvelService.getCharacter(id)
-            .then(onCharacterUpdate)
-            .catch(onError);
+        getCharacter(id).then(onCharacterUpdate);
     }
 
     let characterContent;
     if (isLoading) {
         characterContent = <Spinner />;
-    } else if (isError) {
+    } else if (error) {
         characterContent = <Error />;
     } else {
         characterContent = <CharacterView character={character} />
@@ -67,7 +56,7 @@ const RandomChar = () => {
 
 const CharacterView = ({ character }) => {
     const { name, description, thumbnail, homepage, wiki } = character;
-    const isImageNotFound = thumbnail.includes("image_not_available");
+    const isImageNotFound = thumbnail ? thumbnail.includes("image_not_available") : true;
 
     return (
         <div className="randomchar__block">

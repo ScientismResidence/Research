@@ -1,52 +1,35 @@
 import { useEffect, useState } from "react";
-
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 
 import './charList.scss';
 
 const CharList = ({ onSelectCharacter }) => {
     const [characters, setCharacters] = useState([]);
     const [offset, setOffset] = useState(0);
-    const [isLoading, setIsLoading] = useState(true);
-    const [isError, setIsError] = useState(false);
-    const [isCharactersAdding, setIsCharactersAdding] = useState(false);
     const [activeCharacter, setActiveCharacter] = useState(null);
+
+    const {isLoading, getCharacters} = useMarvelService();
 
     useEffect(() => {
         updateCharacters();
     }, []);
 
-    const marvelService = new MarvelService();
-
     const onCharactersUpdate = (characters) => {
         setCharacters(characters);
         setOffset(characters.length);
-        setIsLoading(false);
-    }
-
-    const onError = () => {
-        setIsError(true);
-        setIsLoading(false);
     }
 
     const updateCharacters = () => {
-        setIsLoading(true);
-        marvelService.getCharacters()
-            .then(onCharactersUpdate)
-            .catch(onError);
+        getCharacters().then(onCharactersUpdate);
     }
 
     const onCharactersAdded = (newCharacters) => {
         setCharacters((characters) => ([...characters, ...newCharacters]));
-        setIsCharactersAdding(false);
         setOffset((offset) => (offset + newCharacters.length));
     }
 
     const addCharacters = () => {
-        setIsCharactersAdding(true);
-        marvelService.getCharacters(offset)
-            .then(onCharactersAdded)
-            .catch(onError);
+        getCharacters(offset).then(onCharactersAdded);
     }
 
     const selectCharacter = (id) => {
@@ -81,7 +64,7 @@ const CharList = ({ onSelectCharacter }) => {
             </ul>
             <button
                 className="button button__main button__long"
-                disabled={isCharactersAdding}
+                disabled={isLoading}
                 onClick={addCharacters}
             >
                 <div className="inner">load more</div>
