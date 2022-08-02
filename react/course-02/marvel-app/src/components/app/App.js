@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import AppHeader from "../appHeader/AppHeader";
-import { MainPage, ComicsPage } from "../pages";
+import { MainPage, ComicsPage, NoMatchPage, ComicDetailsPage } from "../pages";
+import Spinner from "../ui/spinner/Spinner";
 
 const App = () => {
     return (
@@ -9,10 +11,14 @@ const App = () => {
             <div className="app">
                 <AppHeader />
                 <main>
-                    <Routes>
-                        <Route path="/" element={<MainPage/>}/>
-                        <Route path="/comics" element={<ComicsPage/>}/>
-                    </Routes>
+                    <Suspense fallback={<Spinner />}>
+                        <Routes>
+                            <Route path="/" element={<MainPage />} />
+                            <Route path="/comics" element={<ComicsPage />} />
+                            <Route path="/comics/:id" element={<ComicDetailsPage />} />
+                            <Route path="*" element={<NoMatchPage />} />
+                        </Routes>
+                    </Suspense>
                 </main>
             </div>
         </Router>

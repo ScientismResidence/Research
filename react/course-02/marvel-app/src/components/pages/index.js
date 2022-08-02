@@ -1,4 +1,8 @@
-import ComicsPage from "../pages/ComicsPage";
-import MainPage from "../pages/MainPage";
+import { lazy } from "react";
 
-export {MainPage, ComicsPage};
+const MainPage = lazy(() => import("../pages/MainPage")); 
+const ComicsPage = lazy(() => import("../pages/ComicsPage"));
+const ComicDetailsPage = lazy(() => import("../pages/ComicDetailsPage"));
+const NoMatchPage = lazy(() => import("../pages/NoMatchPage"));
+
+export { MainPage, ComicsPage, ComicDetailsPage, NoMatchPage };
