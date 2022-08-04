@@ -6,18 +6,18 @@ import useMarvelService from "../../services/MarvelService";
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
-
+import useAppContext, { AppActionType } from "../../context/context";
 
 const RandomChar = () => {
-    const [character, setCharacter] = useState({});
-    const {isLoading, error, getCharacter} = useMarvelService();
+    const state = useAppContext();
+    const { isLoading, error, getCharacter } = useMarvelService();
 
     useEffect(() => {
         updateCharacter();
     }, []);
 
     const onCharacterUpdate = (character) => {
-        setCharacter(character);
+        state.dispatch({ type: AppActionType.UpdateRandomCharacter, payload: character });
     }
 
     const updateCharacter = () => {
@@ -31,9 +31,9 @@ const RandomChar = () => {
     } else if (error) {
         characterContent = <Error />;
     } else {
-        characterContent = <CharacterView character={character} />
+        characterContent = <CharacterView character={state.randomCharacter} />
     }
-
+    console.log("RandomChar render", state.randomCharacter.id);
     return (
         <div className="randomchar">
             {characterContent}

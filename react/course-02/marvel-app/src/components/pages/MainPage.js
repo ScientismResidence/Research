@@ -6,6 +6,7 @@ import CharInfo from "../charInfo/CharInfo";
 import ErrorBoundary from "../ui/errorBoundary/ErrorBoundary";
 
 import decoration from '../../resources/img/vision.png';
+import RandomCharInfo from "../randomCharInfo/RandomCharInfo";
 
 const MainPage = () => {
     const [selectedCharacter, setSelectedCharacter] = useState(null);
@@ -17,10 +18,11 @@ const MainPage = () => {
     return (
         <>
             <RandomChar />
+            <RandomCharInfo />
             <div className="char__content">
                 <CharList onSelectCharacter={onSelectCharacter} />
                 <ErrorBoundary>
-                    <CharInfo selectedCharacter={selectedCharacter} />
+                    <CharInfo selectedCharacter={selectedCharacter} />   
                 </ErrorBoundary>
             </div>
             <img className="bg-decoration" src={decoration} alt="vision" />
