@@ -5,7 +5,7 @@
 		}
 	],
 	"settings": {
-		"terminal.integrated.cwd": "${workspaceFolder}/react/course-02/marvel-app",
+		"terminal.integrated.cwd": "${workspaceFolder}/react/course-02/react-redux",
 		"workbench.tree.indent": 16,
 		"workbench.tree.renderIndentGuides": "always",
 		"editor.tabSize": 4
