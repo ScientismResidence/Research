@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import Spinner from "../ui/spinner/Spinner";
 import Error from "../ui/error/Error";
@@ -33,7 +33,7 @@ const RandomChar = () => {
     } else {
         characterContent = <CharacterView character={state.randomCharacter} />
     }
-    console.log("RandomChar render", state.randomCharacter.id);
+    
     return (
         <div className="randomchar">
             {characterContent}

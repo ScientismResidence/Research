@@ -13,11 +13,11 @@ const MainPage = () => {
 
     const onSelectCharacter = (id) => {
         setSelectedCharacter(id);
-    }
+    };
 
     return (
         <>
-            <RandomChar />
+            <RandomChar/>
             <RandomCharInfo />
             <div className="char__content">
                 <CharList onSelectCharacter={onSelectCharacter} />

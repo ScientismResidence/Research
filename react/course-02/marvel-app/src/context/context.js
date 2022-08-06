@@ -2,6 +2,7 @@ import { createContext, useContext, useReducer } from "react";
 
 export class AppActionType {
     static UpdateRandomCharacter = "UpdateRandomCharacter";
+    static ToggleIsSomething = "ToggleIsSomething";
 }
 
 const initial = {
@@ -13,13 +14,16 @@ const initial = {
         homepage: null,
         wiki: null,
         comics: []
-    }
+    },
+    isSomething: false
 };
 
 const reducer = (state, action) => {
     switch (action.type) {
         case AppActionType.UpdateRandomCharacter:
             return { ...state, randomCharacter: action.payload }
+        case AppActionType.ToggleIsSomething:
+            return { ...state, isSomething: !state.isSomething }
         default:
             throw new Error(`Unknown AppActionType [${action.type}]`)
     }
