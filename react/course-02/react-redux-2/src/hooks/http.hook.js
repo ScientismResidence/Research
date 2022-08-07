@@ -1,35 +1,38 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
-export const useHttp = () => {
-    // const [process, setProcess] = useState('waiting');
+export class HttpState {
+    static Idle = "Idle";
+    static Request = "Request";
+    static Success = "Success";
+    static Error = "Error";
+}
 
-    const request = useCallback(async (url, method = 'GET', body = null, headers = {'Content-Type': 'application/json'}) => {
+export const useHttp = (url, onSuccess, onError) => {
+    const [httpState, setHttpState] = useState(HttpState.Idle);
+    const [error, setError] = useState(false);
 
-        // setProcess('loading');
+    const request = useCallback(async (method = 'GET', body = null, headers = { 'Content-Type': 'application/json' }) => {
+        setHttpState(HttpState.Request);
+        setError(false);
 
         try {
-            const response = await fetch(url, {method, body, headers});
+            const response = await fetch(url, { method, body, headers });
 
             if (!response.ok) {
-                throw new Error(`Could not fetch ${url}, status: ${response.status}`);
+                throw new Error(`Could not request ${url}, status: ${response.status}`);
             }
 
             const data = await response.json();
+            await onSuccess(data);
+            setHttpState(HttpState.Success);
+        } catch (error) {
+            setError(error);
+            await onError(error);
+            setHttpState(HttpState.Error);
 
-            return data;
-        } catch(e) {
-            // setProcess('error');
-            throw e;
+            throw error;
         }
     }, []);
 
-    // const clearError = useCallback(() => {
-        // setProcess('loading');
-    // }, []);
-
-    return {request, 
-            // clearError, 
-            // process, 
-            // setProcess
-        }
+    return { request, httpState, error }
 }

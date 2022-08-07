@@ -14,13 +14,16 @@ import Spinner from '../spinner/Spinner';
 const HeroesList = () => {
     const {heroes, heroesLoadingStatus} = useSelector(state => state);
     const dispatch = useDispatch();
-    const {request} = useHttp();
+
+    const {request, httpState, error} = useHttp(
+        "http://localhost:3001/heroes",
+        data => dispatch(heroesFetched(data)),
+        error => dispatch(heroesFetchingError())
+    );
 
     useEffect(() => {
         dispatch(heroesFetching());
-        request("http://localhost:3001/heroes")
-            .then(data => dispatch(heroesFetched(data)))
-            .catch(() => dispatch(heroesFetchingError()))
+        request();
 
         // eslint-disable-next-line
     }, []);
