@@ -21,8 +21,8 @@ import FormErrorMessage from "../ui/error-message";
 // данных из фильтров
 
 const HeroesAddForm = () => {
-    const filters = useSelector(state => state.filters);
-    const filtersRemoteStatus = useSelector(state => state.filtersRemoteStatus);
+    const filters = useSelector(state => state.heroFilters.filters);
+    const filtersRemoteStatus = useSelector(state => state.heroFilters.filtersRemoteStatus);
     
     const filterNames = useMemo(() => filters.map(value => value.name), [filters]);
     const { register, handleSubmit, reset, formState: { errors } } = useYupForm(getAddCharacterSchema(filterNames));

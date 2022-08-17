@@ -2,7 +2,7 @@ import { useHttp } from '../../hooks/http.hook';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { heroesLoading, heroesLoaded, heroesLoadingError } from '../../actions';
+import { heroesLoaded, heroesLoadingError, ActionTypes } from '../../actions';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 import RemoteStatus from '../../store/remote-status';
@@ -13,9 +13,9 @@ import RemoteStatus from '../../store/remote-status';
 // Удаление идет и с json файла при помощи метода DELETE
 
 const HeroesList = () => {
-    const heroes = useSelector(state => state.heroes);
-    const heroesFilter = useSelector(state => state.heroesFilter);
-    const heroesRemoteStatus = useSelector(state => state.heroesRemoteStatus)
+    const heroes = useSelector(state => state.heroes.heroes);
+    const heroesFilter = useSelector(state => state.heroFilters.heroesFilter);
+    const heroesRemoteStatus = useSelector(state => state.heroes.heroesRemoteStatus)
     const dispatch = useDispatch();
 
     const filteredHeroes = heroes.filter(value => {
@@ -35,7 +35,7 @@ const HeroesList = () => {
     );
 
     useEffect(() => {
-        dispatch(heroesLoading());
+        dispatch(ActionTypes.HeroesLoading);
         request();
 
         // eslint-disable-next-line

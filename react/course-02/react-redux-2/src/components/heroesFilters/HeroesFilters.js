@@ -10,8 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeHeroFilter } from "../../actions";
 
 const HeroesFilters = () => {
-    const filters = useSelector(state => state.filters);
-    const heroesFilter = useSelector(state => state.heroesFilter);
+    const filters = useSelector(state => state.heroFilters.filters);
+    const heroesFilter = useSelector(state => state.heroFilters.heroesFilter);
     const dispatch = useDispatch();
 
     const allFilters = [{ name: "all", label: "All" }, ...filters];

@@ -4,12 +4,9 @@ import RemoteStatus from "../store/remote-status"
 const initialState = {
     heroes: [],
     heroesRemoteStatus: RemoteStatus.Idle,
-    heroesFilter: "all",
-    filters: [],
-    filtersRemoteStatus: RemoteStatus.Idle
 }
 
-const reducer = (state = initialState, action) => {
+const heroesReducer = (state = initialState, action) => {
     switch (action.type) {
         case ActionTypes.HeroesLoading:
             return {
@@ -27,23 +24,6 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 heroesRemoteStatus: RemoteStatus.Error
             }
-
-        case ActionTypes.FiltersLoading:
-            return {
-                ...state,
-                filtersRemoteStatus: RemoteStatus.Loading
-            }
-        case ActionTypes.FiltersLoaded:
-            return {
-                ...state,
-                filters: action.payload,
-                filtersRemoteStatus: RemoteStatus.Loaded
-            }
-        case ActionTypes.FiltersLoadingError:
-            return {
-                ...state,
-                filtersRemoteStatus: RemoteStatus.Error
-            }
         case ActionTypes.AddHero:
             return {
                 ...state,
@@ -54,13 +34,8 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 heroes: state.heroes.filter(value => value.id !== action.payload)
             }
-        case ActionTypes.ChangeHeroFilter:
-            return {
-                ...state,
-                heroesFilter: action.payload
-            }
         default: return state
     }
 }
 
-export default reducer;
+export default heroesReducer;
