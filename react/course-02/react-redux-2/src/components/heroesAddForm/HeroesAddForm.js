@@ -10,16 +10,6 @@ import { getAddCharacterSchema } from "../../store/yup-schemes";
 import Spinner from "../spinner/Spinner";
 import FormErrorMessage from "../ui/error-message";
 
-// Задача для этого компонента:
-// Реализовать создание нового героя с введенными данными. Он должен попадать
-// в общее состояние и отображаться в списке + фильтроваться
-// Уникальный идентификатор персонажа можно сгенерировать через uiid
-// Усложненная задача:
-// Персонаж создается и в файле json при помощи метода POST
-// Дополнительно:
-// Элементы <option></option> желательно сформировать на базе
-// данных из фильтров
-
 const HeroesAddForm = () => {
     const filters = useSelector(state => state.heroFilters.filters);
     const filtersRemoteStatus = useSelector(state => state.heroFilters.filtersRemoteStatus);
@@ -36,27 +26,22 @@ const HeroesAddForm = () => {
             element: data.element
         }
         
-        addHeroRequest("POST", hero);
+        addHeroRequest("http://localhost:3001/heroes", "POST", hero)
+            .then(data => {
+                reset();
+                dispatch(addHero(data));
+            })
+            .catch(error => console.log(error));
     }
 
-    const { request: filtersRequest } = useHttp(
-        "http://localhost:3001/filters",
-        data => dispatch(filtersLoaded(data)),
-        error => dispatch(filtersLoadingError())
-    );
-
-    const { request: addHeroRequest } = useHttp(
-        "http://localhost:3001/heroes",
-        data => {
-            reset();
-            dispatch(addHero(data));
-        },
-        error => console.log(error)
-    )
+    const { request: filtersRequest } = useHttp();
+    const { request: addHeroRequest } = useHttp();
 
     useEffect(() => {
         dispatch(filtersLoading());
-        filtersRequest();
+        filtersRequest("http://localhost:3001/filters")
+            .then(data => dispatch(filtersLoaded(data)))
+            .catch(() => dispatch(filtersLoadingError()));
 
         // eslint-disable-next-line
     }, []);

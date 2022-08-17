@@ -2,15 +2,10 @@ import { useHttp } from '../../hooks/http.hook';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { heroesLoaded, heroesLoadingError, ActionTypes } from '../../actions';
+import { loadHeroes } from '../../actions';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 import RemoteStatus from '../../store/remote-status';
-
-// Задача для этого компонента:
-// При клике на "крестик" идет удаление персонажа из общего состояния
-// Усложненная задача:
-// Удаление идет и с json файла при помощи метода DELETE
 
 const HeroesList = () => {
     const heroes = useSelector(state => state.heroes.heroes);
@@ -26,17 +21,10 @@ const HeroesList = () => {
         }
     });
 
-    const { request } = useHttp(
-        "http://localhost:3001/heroes",
-        data => {
-            dispatch(heroesLoaded(data))
-        },
-        error => dispatch(heroesLoadingError())
-    );
+    const { request } = useHttp();
 
     useEffect(() => {
-        dispatch(ActionTypes.HeroesLoading);
-        request();
+        dispatch(loadHeroes(request));
 
         // eslint-disable-next-line
     }, []);

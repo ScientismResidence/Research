@@ -29,6 +29,13 @@ export const heroesLoadingError = () => {
     }
 }
 
+export const loadHeroes = (request) => (dispatch) => {
+    dispatch(ActionTypes.HeroesLoading);
+    request("http://localhost:3001/heroes")
+        .then(data => dispatch(heroesLoaded(data)))
+        .catch(() => dispatch(heroesLoadingError()));
+}
+
 export const filtersLoading = () => {
     return {
         type: ActionTypes.FiltersLoading

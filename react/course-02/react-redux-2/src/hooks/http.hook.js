@@ -11,7 +11,7 @@ export const useHttp = (url, onSuccess, onError) => {
     const [httpState, setHttpState] = useState(HttpState.Idle);
     const [error, setError] = useState(false);
 
-    const request = useCallback(async (method = 'GET', body = null, headers = { 'Content-Type': 'application/json' }) => {
+    const request = useCallback(async (url, method = 'GET', body = null, headers = { 'Content-Type': 'application/json' }) => {
         setHttpState(HttpState.Request);
         setError(false);
 
@@ -23,11 +23,12 @@ export const useHttp = (url, onSuccess, onError) => {
             }
 
             const data = await response.json();
-            await onSuccess(data);
+            //await onSuccess(data);
             setHttpState(HttpState.Success);
+            return data;
         } catch (error) {
             setError(error);
-            await onError(error);
+            //await onError(error);
             setHttpState(HttpState.Error);
 
             throw error;
