@@ -16,7 +16,7 @@ export const useHttp = (url, onSuccess, onError) => {
         setError(false);
 
         try {
-            const response = await fetch(url, { method, body, headers });
+            const response = await fetch(url, { method, body: body ? JSON.stringify(body) : body, headers });
 
             if (!response.ok) {
                 throw new Error(`Could not request ${url}, status: ${response.status}`);

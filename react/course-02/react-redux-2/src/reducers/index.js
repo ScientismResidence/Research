@@ -1,26 +1,63 @@
+import { ActionTypes } from "../actions"
+import RemoteStatus from "../store/remote-status"
+
 const initialState = {
     heroes: [],
-    heroesLoadingStatus: 'idle',
-    filters: []
+    heroesRemoteStatus: RemoteStatus.Idle,
+    heroesFilter: "all",
+    filters: [],
+    filtersRemoteStatus: RemoteStatus.Idle
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'HEROES_FETCHING':
+        case ActionTypes.HeroesLoading:
             return {
                 ...state,
-                heroesLoadingStatus: 'loading'
+                heroesRemoteStatus: RemoteStatus.Loading
             }
-        case 'HEROES_FETCHED':
+        case ActionTypes.HeroesLoaded:
             return {
                 ...state,
                 heroes: action.payload,
-                heroesLoadingStatus: 'idle'
+                heroesRemoteStatus: RemoteStatus.Loaded
             }
-        case 'HEROES_FETCHING_ERROR':
+        case ActionTypes.HeroesLoadingError:
             return {
                 ...state,
-                heroesLoadingStatus: 'error'
+                heroesRemoteStatus: RemoteStatus.Error
+            }
+
+        case ActionTypes.FiltersLoading:
+            return {
+                ...state,
+                filtersRemoteStatus: RemoteStatus.Loading
+            }
+        case ActionTypes.FiltersLoaded:
+            return {
+                ...state,
+                filters: action.payload,
+                filtersRemoteStatus: RemoteStatus.Loaded
+            }
+        case ActionTypes.FiltersLoadingError:
+            return {
+                ...state,
+                filtersRemoteStatus: RemoteStatus.Error
+            }
+        case ActionTypes.AddHero:
+            return {
+                ...state,
+                heroes: [...state.heroes, action.payload]
+            }
+        case ActionTypes.DeleteHero:
+            return {
+                ...state,
+                heroes: state.heroes.filter(value => value.id !== action.payload)
+            }
+        case ActionTypes.ChangeHeroFilter:
+            return {
+                ...state,
+                heroesFilter: action.payload
             }
         default: return state
     }
