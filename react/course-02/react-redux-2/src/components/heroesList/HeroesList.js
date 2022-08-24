@@ -2,10 +2,10 @@ import { useHttp } from '../../hooks/http.hook';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { loadHeroes } from '../../actions';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 import RemoteStatus from '../../store/remote-status';
+import { loadHeroes } from '../../actions';
 
 const HeroesList = () => {
     const heroes = useSelector(state => state.heroes.heroes);

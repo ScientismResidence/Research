@@ -1,3 +1,5 @@
+import { heroesLoaded, heroesLoading, heroesLoadingError } from "../store/heroes.slice";
+
 export class ActionTypes {
     static HeroesLoading = "HeroesLoading";
     static HeroesLoaded = "HeroesLoaded";
@@ -10,7 +12,7 @@ export class ActionTypes {
     static ChangeHeroFilter = "ChangeHeroFilter";
 }
 
-export const heroesLoading = () => {
+/*export const heroesLoading = () => {
     return {
         type: ActionTypes.HeroesLoading
     }
@@ -29,14 +31,29 @@ export const heroesLoadingError = () => {
     }
 }
 
+export const addHero = (hero) => {
+    return {
+        type: ActionTypes.AddHero,
+        payload: hero
+    }
+}
+
+export const deleteHero = (id) => {
+    return {
+        type: ActionTypes.DeleteHero,
+        payload: id
+    }
+}
+*/
+
 export const loadHeroes = (request) => (dispatch) => {
-    dispatch(ActionTypes.HeroesLoading);
+    dispatch(heroesLoading());
     request("http://localhost:3001/heroes")
         .then(data => dispatch(heroesLoaded(data)))
         .catch(() => dispatch(heroesLoadingError()));
 }
 
-export const filtersLoading = () => {
+/*export const filtersLoading = () => {
     return {
         type: ActionTypes.FiltersLoading
     }
@@ -55,23 +72,9 @@ export const filtersLoadingError = () => {
     }
 }
 
-export const addHero = (hero) => {
-    return {
-        type: ActionTypes.AddHero,
-        payload: hero
-    }
-}
-
-export const deleteHero = (id) => {
-    return {
-        type: ActionTypes.DeleteHero,
-        payload: id
-    }
-}
-
 export const changeHeroFilter = (filter) => {
     return {
         type: ActionTypes.ChangeHeroFilter,
         payload: filter
     }
-}
+}*/

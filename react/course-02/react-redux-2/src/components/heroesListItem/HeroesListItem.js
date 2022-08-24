@@ -1,18 +1,15 @@
 import { useDispatch } from "react-redux";
-import { deleteHero } from "../../actions";
 import { useHttp } from "../../hooks/http.hook";
+import { deleteHero } from "../../store/heroes.slice";
 
 const HeroesListItem = ({id, name, description, element}) => {
     const dispatch = useDispatch();
     
-    const { request } = useHttp(
-        `http://localhost:3001/heroes/${id}`,
-        () => dispatch(deleteHero(id)),
-        error => console.log(error)
-    );
+    const { request } = useHttp();
 
     const onCloseClick = () => {
-        request("DELETE");
+        request(`http://localhost:3001/heroes/${id}`, "DELETE")
+            .then(() => dispatch(deleteHero(id)));
     }
 
     let elementClassName;

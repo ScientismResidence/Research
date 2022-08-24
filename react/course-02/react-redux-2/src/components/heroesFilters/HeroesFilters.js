@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { changeHeroFilter } from "../../actions";
+import { changeHeroFilter } from "../../store/hero-filters.slice";
 
 const HeroesFilters = () => {
     const filters = useSelector(state => state.heroFilters.filters);

@@ -1,8 +1,12 @@
-import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
-import ReduxThunk from "redux-thunk";
+// Classic way of store creation
+//import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
+import { configureStore } from "@reduxjs/toolkit";
 
-import heroesReducer from '../reducers/heroes.reducer';
-import heroFiltersReducer from '../reducers/hero-filters.reducer';
+// Classic reducers
+//import heroesReducer from '../reducers/heroes.reducer';
+//import heroFiltersReducer from '../reducers/hero-filters.reducer';
+import heroes from "./heroes.slice";
+import heroFilters from "./hero-filters.slice";
 
 const stringMiddleware = ({dispatch, getState}) => (next) => (action, ...args) => {
     if (typeof action === 'string') {
@@ -33,7 +37,18 @@ const enhancer = (createStore) => (...args) => {
     return store;
 }
 
-const store = createStore(
+const store = configureStore({
+    reducer: {
+        heroes,
+        heroFilters  
+    },
+    middleware: (getDefaultMiddleware) => [...getDefaultMiddleware(), stringMiddleware],
+    enhancers: [enhancer],
+    devTools: process.env.NODE_ENV === "development"
+});
+
+// Classic way of store creation
+/*const store = createStore(
     combineReducers({
         heroes: heroesReducer,
         heroFilters: heroFiltersReducer    
@@ -43,6 +58,6 @@ const store = createStore(
         enhancer,
         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
     )
-);
+);*/
 
 export default store;

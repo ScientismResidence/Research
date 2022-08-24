@@ -1,10 +1,10 @@
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 } from 'uuid';
-
-import { filtersLoading, filtersLoaded, filtersLoadingError, addHero } from "../../actions";
 import { useHttp } from "../../hooks/http.hook";
 import { useYupForm } from "../../hooks/use-yup-form";
+import { filtersLoaded, filtersLoading, filtersLoadingError } from "../../store/hero-filters.slice";
+import { addHero } from "../../store/heroes.slice";
 import RemoteStatus from "../../store/remote-status";
 import { getAddCharacterSchema } from "../../store/yup-schemes";
 import Spinner from "../spinner/Spinner";
