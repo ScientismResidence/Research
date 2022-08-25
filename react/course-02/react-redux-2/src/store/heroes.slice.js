@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { useHttp } from "../hooks/http.hook";
 import RemoteStatus from "./remote-status"
 
 const initialState = {
@@ -6,22 +7,37 @@ const initialState = {
     heroesRemoteStatus: RemoteStatus.Idle,
 }
 
+export const loadHeroes = createAsyncThunk(
+    "heroes.loadHeroes",
+    async () => {
+        const request = useHttp();
+        return await request("http://localhost:3001/heroes");
+    }
+);
+
 const { actions, reducer } = createSlice({
     name: "heroes",
     initialState,
     reducers: {
-        heroesLoading: state =>
-            { state.heroesRemoteStatus = RemoteStatus.Loading },
-        heroesLoaded: (state, action) => { 
-            state.heroes = action.payload;
-            state.heroesRemoteStatus = RemoteStatus.Loaded;
-        },
-        heroesLoadingError: state =>
-            { state.heroesRemoteStatus = RemoteStatus.Error },
         addHero: (state, action) =>
             { state.heroes.push(action.payload); },
         deleteHero: (state, action) => 
             { state.heroes = state.heroes.filter(value => value.id !== action.payload); }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(loadHeroes.pending, state =>
+                { state.heroesRemoteStatus = RemoteStatus.Loading; })
+            .addCase(loadHeroes.fulfilled, (state, action) => {
+                console.log("fulfilled", action);
+                state.heroesRemoteStatus = RemoteStatus.Loaded;
+                state.heroes = action.payload;
+            })
+            .addCase(loadHeroes.rejected, (state, action) => {
+                console.log("error", action);
+                state = RemoteStatus.Error; 
+            })
+            .addDefaultCase(() => {});
     }
 })
 

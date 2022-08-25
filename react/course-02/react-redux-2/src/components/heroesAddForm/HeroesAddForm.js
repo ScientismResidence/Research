@@ -34,8 +34,8 @@ const HeroesAddForm = () => {
             .catch(error => console.log(error));
     }
 
-    const { request: filtersRequest } = useHttp();
-    const { request: addHeroRequest } = useHttp();
+    const filtersRequest = useHttp();
+    const addHeroRequest = useHttp();
 
     useEffect(() => {
         dispatch(filtersLoading());

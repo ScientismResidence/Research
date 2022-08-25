@@ -1,5 +1,3 @@
-import { useCallback, useState } from "react";
-
 export class HttpState {
     static Idle = "Idle";
     static Request = "Request";
@@ -7,13 +5,13 @@ export class HttpState {
     static Error = "Error";
 }
 
-export const useHttp = (url, onSuccess, onError) => {
-    const [httpState, setHttpState] = useState(HttpState.Idle);
-    const [error, setError] = useState(false);
+export const useHttp = () => {
+    //const [httpState, setHttpState] = useState(HttpState.Idle);
+    //const [error, setError] = useState(false);
 
-    const request = useCallback(async (url, method = 'GET', body = null, headers = { 'Content-Type': 'application/json' }) => {
-        setHttpState(HttpState.Request);
-        setError(false);
+    const request = async (url, method = 'GET', body = null, headers = { 'Content-Type': 'application/json' }) => {
+        //setHttpState(HttpState.Request);
+        //setError(false);
 
         try {
             const response = await fetch(url, { method, body: body ? JSON.stringify(body) : body, headers });
@@ -23,17 +21,15 @@ export const useHttp = (url, onSuccess, onError) => {
             }
 
             const data = await response.json();
-            //await onSuccess(data);
-            setHttpState(HttpState.Success);
+            //setHttpState(HttpState.Success);
             return data;
         } catch (error) {
-            setError(error);
-            //await onError(error);
-            setHttpState(HttpState.Error);
+            //setError(error);
+            //setHttpState(HttpState.Error);
 
             throw error;
         }
-    }, []);
+    };
 
-    return { request, httpState, error }
+    return request;
 }

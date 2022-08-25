@@ -5,7 +5,7 @@ import { deleteHero } from "../../store/heroes.slice";
 const HeroesListItem = ({id, name, description, element}) => {
     const dispatch = useDispatch();
     
-    const { request } = useHttp();
+    const request = useHttp();
 
     const onCloseClick = () => {
         request(`http://localhost:3001/heroes/${id}`, "DELETE")

@@ -1,11 +1,10 @@
-import { useHttp } from '../../hooks/http.hook';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 import RemoteStatus from '../../store/remote-status';
-import { loadHeroes } from '../../actions';
+import { loadHeroes } from '../../store/heroes.slice';
 
 const HeroesList = () => {
     const heroes = useSelector(state => state.heroes.heroes);
@@ -21,10 +20,8 @@ const HeroesList = () => {
         }
     });
 
-    const { request } = useHttp();
-
     useEffect(() => {
-        dispatch(loadHeroes(request));
+        dispatch(loadHeroes());
 
         // eslint-disable-next-line
     }, []);
