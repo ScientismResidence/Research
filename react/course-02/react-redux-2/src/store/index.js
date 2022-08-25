@@ -40,7 +40,7 @@ const enhancer = (createStore) => (...args) => {
 const store = configureStore({
     reducer: {
         heroes,
-        heroFilters  
+        heroFilters
     },
     middleware: (getDefaultMiddleware) => [...getDefaultMiddleware(), stringMiddleware],
     enhancers: [enhancer],

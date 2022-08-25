@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { v4 } from 'uuid';
 import { useHttp } from "../../hooks/http.hook";
 import { useYupForm } from "../../hooks/use-yup-form";
-import { filtersLoaded, filtersLoading, filtersLoadingError } from "../../store/hero-filters.slice";
+import { filtersLoaded, filtersLoading, filtersLoadingError, filtersSelector } from "../../store/hero-filters.slice";
 import { addHero } from "../../store/heroes.slice";
 import RemoteStatus from "../../store/remote-status";
 import { getAddCharacterSchema } from "../../store/yup-schemes";
@@ -11,7 +11,8 @@ import Spinner from "../spinner/Spinner";
 import FormErrorMessage from "../ui/error-message";
 
 const HeroesAddForm = () => {
-    const filters = useSelector(state => state.heroFilters.filters);
+    //const filters = useSelector(filtersSelector);
+    const filters = useSelector(filtersSelector);
     const filtersRemoteStatus = useSelector(state => state.heroFilters.filtersRemoteStatus);
     
     const filterNames = useMemo(() => filters.map(value => value.name), [filters]);

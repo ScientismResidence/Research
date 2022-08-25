@@ -1,11 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createEntityAdapter, createSlice } from "@reduxjs/toolkit"
 import RemoteStatus from "./remote-status";
 
-const initialState = {
+const heroFiltersAdapter = createEntityAdapter({
+    selectId: model => model.name
+});
+const initialState = heroFiltersAdapter.getInitialState({
     heroesFilter: "all",
-    filters: [],
     filtersRemoteStatus: RemoteStatus.Idle
-}
+});
 
 const { actions, reducer } = createSlice({
     name: "heroFilters",
@@ -14,7 +16,7 @@ const { actions, reducer } = createSlice({
         filtersLoading: state =>
             { state.filtersRemoteStatus = RemoteStatus.Loading; },
         filtersLoaded: (state, action) => {
-            state.filters = action.payload;
+            heroFiltersAdapter.setAll(state, action.payload);
             state.filtersRemoteStatus = RemoteStatus.Loaded;
         },
         filtersLoadingError: state =>
@@ -25,6 +27,7 @@ const { actions, reducer } = createSlice({
 });
 
 export default reducer;
+export const { selectAll: filtersSelector } = heroFiltersAdapter.getSelectors(state => state.heroFilters);
 export const {
     filtersLoading,
     filtersLoaded,
